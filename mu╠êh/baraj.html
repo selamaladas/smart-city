@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <style>
+        .container{
+            background-color: rgb(232, 217, 185);
+            width: 70%;
+            margin: 170px;
+            padding: 10px;
+        }
+        Body{
+background: #262626 url(https://img.freepik.com/free-photo/abstract-luxury-gradient-blue-background-smooth-dark-blue-with-black-vignette-studio-banner_1258-54583.jpg?w=360) ;
+background-size: cover;
+
+
+min-height: 100vh;
+}
+    </style>
+    <title>Baraj Doluluk Oranları</title>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+    <h1>
+               
+    </h1>
+    <div class="container">
+        <canvas id="myChart">
+
+        </canvas>
+    </div>
+    <script>
+        $(document).ready(function(){
+             function getData() {
+                var url =  "https://api.thingspeak.com/channels/2087788/fields/3,4,5,6,7,8.json?api_key=X2TQC5T479S4TJK3&results=5"
+
+                $.getJSON(url, function(data){
+                      var field3Values = [];
+                      var field4Values = [];
+                      var field5Values = [];
+                      var field6Values = [];
+                      var field7Values = [];
+                      var field8Values = [];
+                      var timestamps = [];
+
+                      $.each(data.feeds, function(index, feed){
+                          field3Values.push(feed.field3);
+                          field4Values.push(feed.field4);
+                          field5Values.push(feed.field5);
+                          field6Values.push(feed.field6);
+                          field7Values.push(feed.field7);
+                          field8Values.push(feed.field8);
+                          timestamps.push(feed.created_at);
+                      });
+                      var ctx = document.getElementById('myChart').getContext('2d');
+
+                      var chart = new Chart(ctx, {
+                          type:'bar',
+                          data:{
+                              labels:timestamps,
+                              datasets:[{
+                                  label:'Sazlıdere Barajı',
+                                  data:field3Values,
+                                  borderColor:'',
+                                  backgroundColor: '#84bd00',
+                                  borderWidth: 1
+                              },
+                              {
+                                label:'Alibey Barajı',
+                                  data:field4Values,
+                                  borderColor:'',
+                                  backgroundColor: '#00205b',
+                                  borderWidth: 1
+                              },
+                              {
+                                label:'Büyükçekmece Barajı',
+                                  data:field5Values,
+                                  borderColor:'',
+                                  backgroundColor: '#000000',
+                                  borderWidth: 1
+                              },
+                              {
+                                label:'Darlık Barajı',
+                                  data:field6Values,
+                                  borderColor:'',
+                                  backgroundColor: '#660000',
+                                  borderWidth: 1
+                              },
+                              {
+                                label:'Elmalı Barajı',
+                                  data:field7Values,
+                                  borderColor:'',
+                                  backgroundColor: '#336600',
+                                  borderWidth: 1
+                              },
+                              {
+                                label:'Ömerli Barajı',
+                                  data:field8Values,
+                                  borderColor:'',
+                                  backgroundColor: '#999900',
+                                  borderWidth: 1
+                              }
+                              
+                            ]
+                          },
+                          Options: {
+                              scales: {
+                                  yAxes: [{
+                                      thicks: {
+                                          beginAtZero: true
+                                      }
+                                  }]
+                              }
+                          }
+
+                      });
+
+                });
+             }
+             getData();
+        });
+    </script>
+</body>
+</html>
